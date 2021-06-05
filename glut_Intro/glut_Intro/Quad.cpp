@@ -51,6 +51,26 @@ std::vector<Vector3d> Quad::getQuadVertices()
 	quadVertices.push_back(backRightTop);
 	quadVertices.push_back(backLeftTop);
 
+	//backside
+	Vector3d backLeftBottom = backLeftTop + height * Vector3d::down();
+
+	quadVertices.push_back(backLeftBottom);
+	quadVertices.push_back(backRightBottom);
+	quadVertices.push_back(backRightTop);
+	quadVertices.push_back(backLeftTop);
+
+	//left side
+	quadVertices.push_back(atOrigin);
+	quadVertices.push_back(backLeftBottom);
+	quadVertices.push_back(backLeftTop);
+	quadVertices.push_back(frontLeftTop);
+
+	//downside
+	quadVertices.push_back(atOrigin);
+	quadVertices.push_back(frontRightBottom);
+	quadVertices.push_back(backRightBottom);
+	quadVertices.push_back(backLeftBottom);
+
 	return quadVertices;
 }
 

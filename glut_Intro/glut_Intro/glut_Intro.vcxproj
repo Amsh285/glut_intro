@@ -141,12 +141,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Vector3d.cpp" />
     <ClCompile Include="Vector3dMatrix.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Geometry.h" />
+    <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Vector3d.h" />
     <ClInclude Include="Vector3dMatrix.h" />

@@ -4,8 +4,9 @@
 #include <GL/gl.h>  
 #include <GL/glu.h>  
 
-#include "Vector3d.h"
+#include "Geometry.h"
 #include "Quad.h"
+#include "Vector3d.h"
 #include "Vector3dMatrix.h"
 
 Quad* testQuad = nullptr;
@@ -39,16 +40,14 @@ void display()
 	glLoadIdentity();
 
 	glTranslatef(0, 0, -20);
-	//glRotatef(45.0, 0.0, 1.0, 0.0);
-	glRotatef(-45.0, 0.0, 1.0, 0.0);
-	glRotatef(45.0, 1.0, 0.0, 0.0);
-	/*glRotatef(15.0, 0.0, 1.0, 0.0);
-	glTranslatef(0, 0, -8);*/
 
 	glBegin(GL_QUADS);
 	
 	//sollte man nicht unbedingt hier machen. Die Vertices kann man besser woanders berechnen
 	std::vector<Vector3d> quadVertices = testQuad->getQuadVertices();
+	//Vermutlich Rundungsfehler T_T
+	quadVertices = Geometry::rotateY(quadVertices, 45.0);
+	quadVertices = Geometry::rotateX(quadVertices, 45.0);
 
 	for (size_t i = 0; i < quadVertices.size(); i++)
 	{
@@ -65,7 +64,7 @@ void display()
 void init(int width, int height)
 {
 	// Farbe mit der das bild bereinigt wird
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 
 	//initiale tiefenwerte für den z- buffer 1.0 wegen einheitswürfel?
 	glClearDepth(1.0);
