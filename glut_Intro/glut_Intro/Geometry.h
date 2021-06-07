@@ -20,9 +20,23 @@ public:
 	static std::vector<Vector3d> rotateZ(
 		const std::vector<Vector3d>& source,
 		const float& angle);
+
+	static std::vector<Vector3d> translate(
+		const std::vector<Vector3d>& source,
+		const Vector3d translationVector);
+
+	Vector3d getPosition() const { return position; };
+	void setPosition(Vector3d value);
+
+	Vector3d getTranslationVector() const { return translationVector; };
 private:
 	static std::vector<Vector3d> rotate(
 		const std::vector<Vector3d>& source,
 		const Vector3dMatrix& rotationMatrix);
+
+	Vector3d position = Vector3d::zero();
+	Vector3d translationVector = Vector3d::zero();
+protected:
+	Vector3d atOrigin = Vector3d::zero();
 };
 

@@ -39,15 +39,15 @@ void display()
 	// Initialisierung des Matrixstacks
 	glLoadIdentity();
 
-	glTranslatef(0, 0, -20);
+	/*glTranslatef(0, 0, -20);*/
 
 	glBegin(GL_QUADS);
 	
 	//sollte man nicht unbedingt hier machen. Die Vertices kann man besser woanders berechnen
 	std::vector<Vector3d> quadVertices = testQuad->getQuadVertices();
-	//Vermutlich Rundungsfehler T_T
 	quadVertices = Geometry::rotateY(quadVertices, 45.0);
 	quadVertices = Geometry::rotateX(quadVertices, 45.0);
+	quadVertices = Geometry::translate(quadVertices, testQuad->getTranslationVector());
 
 	for (size_t i = 0; i < quadVertices.size(); i++)
 	{
@@ -64,7 +64,7 @@ void display()
 void init(int width, int height)
 {
 	// Farbe mit der das bild bereinigt wird
-	glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+	glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
 
 	//initiale tiefenwerte für den z- buffer 1.0 wegen einheitswürfel?
 	glClearDepth(1.0);
@@ -81,6 +81,7 @@ int main(int argc, char** argv)
 {
 	//Vector3d lScale = 2 * Vector3d::right();
 	testQuad = new Quad(4, 2, 6);
+	testQuad->setPosition(Vector3d(-2.0f, -1.0f, -20.0f));
 
 	glutInit(&argc, argv);
 

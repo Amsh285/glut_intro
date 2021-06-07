@@ -3,10 +3,11 @@
 #include<stdexcept>
 #include<vector>
 
+#include "Geometry.h"
 #include "Vector3d.h"
 #include "Vector3dMatrix.h"
 
-class Quad
+class Quad : public Geometry
 {
 	public:
 		Quad();
@@ -19,7 +20,5 @@ class Quad
 		float width;
 		float height;
 		float depth;
-
-		Vector3d atOrigin = Vector3d::zero();
 };
 
