@@ -17,6 +17,8 @@ public:
 		const std::vector<Vector3d>& source,
 		const float& angle);
 
+	static Vector3d rotateY(const Vector3d& target, const float& angle);
+
 	static std::vector<Vector3d> rotateZ(
 		const std::vector<Vector3d>& source,
 		const float& angle);

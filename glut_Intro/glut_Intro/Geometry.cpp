@@ -10,6 +10,11 @@ std::vector<Vector3d> Geometry::rotateY(const std::vector<Vector3d>& source, con
     return rotate(source, Vector3dMatrix::rotationY(angle));
 }
 
+Vector3d Geometry::rotateY(const Vector3d& target, const float& angle)
+{
+    return Vector3dMatrix::rotationY(angle) * target;
+}
+
 std::vector<Vector3d> Geometry::rotateZ(const std::vector<Vector3d>& source, const float& angle)
 {
     return rotate(source, Vector3dMatrix::rotationZ(angle));

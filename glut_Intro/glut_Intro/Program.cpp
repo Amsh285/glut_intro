@@ -4,11 +4,13 @@
 #include <GL/gl.h>  
 #include <GL/glu.h>  
 
+#include "Camera.h"
 #include "Geometry.h"
 #include "Quad.h"
 #include "Vector3d.h"
 #include "Vector3dMatrix.h"
 
+Camera* camera = nullptr;
 Quad* testQuad = nullptr;
 
 void resize(int width, int height)
@@ -39,14 +41,22 @@ void display()
 	// Initialisierung des Matrixstacks
 	glLoadIdentity();
 
-	/*glTranslatef(0, 0, -20);*/
+	Vector3d position = camera->getPosition();
+	Vector3d direction = camera->getDirection();
+	Vector3d upVector = camera->getUpVector();
+
+	gluLookAt(position.X(), position.Y(), position.Z(),
+		direction.X(), direction.Y(), direction.Z(),
+		upVector.X(), upVector.Y(), upVector.Z()
+	);
 
 	glBegin(GL_QUADS);
 	
 	//sollte man nicht unbedingt hier machen. Die Vertices kann man besser woanders berechnen
 	std::vector<Vector3d> quadVertices = testQuad->getQuadVertices();
-	quadVertices = Geometry::rotateY(quadVertices, 45.0);
-	quadVertices = Geometry::rotateX(quadVertices, 45.0);
+	quadVertices = Geometry::rotateY(quadVertices, 45.0f);
+	quadVertices = Geometry::rotateX(quadVertices, 45.0f);
+	/*quadVertices = Geometry::rotateZ(quadVertices, 45.0);*/
 	quadVertices = Geometry::translate(quadVertices, testQuad->getTranslationVector());
 
 	for (size_t i = 0; i < quadVertices.size(); i++)
@@ -79,9 +89,11 @@ void init(int width, int height)
 
 int main(int argc, char** argv)
 {
-	//Vector3d lScale = 2 * Vector3d::right();
-	testQuad = new Quad(4, 2, 6);
+	testQuad = new Quad(4.0f, 2.0f, 6.0f);
 	testQuad->setPosition(Vector3d(-2.0f, -1.0f, -20.0f));
+
+	camera = new Camera();
+	camera->setRoationAngleY(180.0f);
 
 	glutInit(&argc, argv);
 
