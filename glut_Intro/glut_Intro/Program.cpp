@@ -48,6 +48,7 @@ void onClick(int button, int state, int x, int y)
 				else if (angleX < -90.0f)
 					angleX = -90.0f;
 
+				//Todo: muss man beim ändern des Winkels eine neuen upvektor berechnen?
 				camera->setAngles(angleX, angleY);
 				glutPostRedisplay();
 				break;
@@ -55,6 +56,30 @@ void onClick(int button, int state, int x, int y)
 			default:
 				break;
 		}
+	}
+}
+
+void onKeyPressed(unsigned char key, int x, int y)
+{
+	std::cout << key << std::endl;
+
+	if (key == 'w')
+	{
+		Vector3d newCameraPosition = camera->getPosition() + camera->getDirection();
+		camera->setPosition(newCameraPosition);
+		glutPostRedisplay();
+	}
+	else if (key == 's')
+	{
+		Vector3d newCameraPosition = camera->getPosition() + -1.0f * camera->getDirection();
+		camera->setPosition(newCameraPosition);
+		glutPostRedisplay();
+	}
+	else if (key == 'z')
+	{
+		camera->setPosition(Vector3d(0.0f, 0.0f, 0.0f));
+		camera->setAngles(0.0f, 0.0f);
+		glutPostRedisplay();
 	}
 }
 
@@ -87,7 +112,7 @@ void display()
 	glLoadIdentity();
 
 	Vector3d position = camera->getPosition();
-	Vector3d direction = camera->getDirection();
+	Vector3d direction = camera->getPosition() + camera->getDirection();
 	Vector3d upVector = camera->getUpVector();
 
 	gluLookAt(position.X(), position.Y(), position.Z(),
@@ -97,11 +122,9 @@ void display()
 
 	glBegin(GL_QUADS);
 
-	//sollte man nicht unbedingt hier machen. Die Vertices kann man besser woanders berechnen
 	std::vector<Vector3d> quadVertices = testQuad->getQuadVertices();
 	quadVertices = Geometry::rotateY(quadVertices, -45.0f);
 	quadVertices = Geometry::rotateX(quadVertices, -45.0f);
-	/*quadVertices = Geometry::rotateZ(quadVertices, 45.0);*/
 	quadVertices = Geometry::translate(quadVertices, testQuad->getTranslationVector());
 
 	for (size_t i = 0; i < quadVertices.size(); i++)
@@ -153,6 +176,7 @@ int main(int argc, char** argv)
 	glutDisplayFunc(&display);
 	glutReshapeFunc(&resize);
 	glutMouseFunc(&onClick);
+	glutKeyboardFunc(&onKeyPressed);
 	init(width, height);
 
 	glutMainLoop();
