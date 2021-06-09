@@ -10,12 +10,12 @@ Quad::Quad(float width, float height, float depth)
 {
 	//todo: check negative Values and 0
 
-	Vector3d identityX = Vector3d(-1.0, 0.0, 0.0);
-	Vector3d identityY = Vector3d(0.0, -1.0, 0);
-	Vector3d identityZ = Vector3d(0.0, 0.0, 1.0);
+	Vector3d identityX = Vector3d(-1.0f, 0.0f, 0.0f);
+	Vector3d identityY = Vector3d(0.0f, -1.0f, 0.0f);
+	Vector3d identityZ = Vector3d(0.0f, 0.0f, -1.0f);
 
-	Vector3dMatrix mirror = Vector3dMatrix(identityX, identityY, identityZ);
-	atOrigin = mirror * fulcrum();
+	Vector3dMatrix reflectionMatrix = Vector3dMatrix(identityX, identityY, identityZ);
+	atOrigin = reflectionMatrix * fulcrum();
 }
 
 std::vector<Vector3d> Quad::getQuadVertices()

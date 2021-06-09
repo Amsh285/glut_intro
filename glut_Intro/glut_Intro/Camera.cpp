@@ -1,22 +1,29 @@
 #include "Camera.h"
 
-void Camera::setRoationAngleX(float value)
+void Camera::setRotationAngleX(float value)
 {
 	rotationAngleX = value;
 	alignDirection();
 }
 
-void Camera::setRoationAngleY(float value)
+void Camera::setRotationAngleY(float value)
 {
 	rotationAngleY = value;
 	alignDirection();
 }
 
+void Camera::setAngles(float rotationX, float rotationY)
+{
+	rotationAngleX = rotationX;
+	rotationAngleY = rotationY;
+
+	alignDirection();
+}
+
 Camera::Camera()
-	: position(Vector3d::zero()), direction(Vector3d(0.0f, 0.0f, 1.0f)),
+	: position(Vector3d::zero()), direction(Vector3d::forward()),
 	upVector(Vector3d::up()), rotationAngleX(0), rotationAngleY(0)
 {
-	//Todo: use refactored Vector3d::forward()
 }
 
 void Camera::alignDirection()

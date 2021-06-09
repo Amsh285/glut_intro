@@ -15,10 +15,12 @@ public:
 	Vector3d getUpVector() const { return upVector; };
 
 	float getRotationAngleX() const { return rotationAngleX; };
-	void setRoationAngleX(float value);
+	void setRotationAngleX(float value);
 
 	float getRotationAngleY() const { return rotationAngleY; };
-	void setRoationAngleY(float value);
+	void setRotationAngleY(float value);
+
+	void setAngles(float rotationX, float rotationY);
 
 	Camera();
 private:

@@ -2,13 +2,13 @@
 class Vector3d
 {
 	public:
-		static Vector3d zero() { return Vector3d(0.0, 0.0, 0.0); };
-		static Vector3d up() { return Vector3d(0.0, 1.0, 0.0); };
-		static Vector3d down() { return Vector3d(0.0, -1.0, 0.0); };
-		static Vector3d right() { return Vector3d(1.0, 0.0, 0.0); };
-		static Vector3d left() { return Vector3d(-1.0, 0.0, 0.0); };
-		static Vector3d back() { return Vector3d(0.0, 0.0, 1.0); };
-		static Vector3d forward() { return Vector3d(0.0, 0.0, -1.0); };
+		static Vector3d zero() { return Vector3d(0.0f, 0.0f, 0.0f); };
+		static Vector3d up() { return Vector3d(0.0f, 1.0f, 0.0f); };
+		static Vector3d down() { return Vector3d(0.0f, -1.0f, 0.0f); };
+		static Vector3d right() { return Vector3d(1.0f, 0.0f, 0.0f); };
+		static Vector3d left() { return Vector3d(-1.0f, 0.0f, 0.0f); };
+		static Vector3d back() { return Vector3d(0.0f, 0.0f, -1.0f); };
+		static Vector3d forward() { return Vector3d(0.0f, 0.0f, 1.0f); };
 
 		Vector3d(float x, float y, float z);
 

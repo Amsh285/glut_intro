@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdlib.h>
 
 #include <GL/glut.h> 
@@ -10,8 +11,52 @@
 #include "Vector3d.h"
 #include "Vector3dMatrix.h"
 
+const int width = 1024;
+const int height = 768;
+
 Camera* camera = nullptr;
 Quad* testQuad = nullptr;
+
+int downX;
+int downY;
+
+void onClick(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT)
+	{
+		switch (state)
+		{
+			case GLUT_DOWN:
+			{
+				downX = x;
+				downY = y;
+				break;
+			}
+			case GLUT_UP:
+			{
+				int deltaY = x - downX;
+				int deltaX = downY - y;
+
+				float ratioY = width / 90;
+				float ratioX = height / 60;
+
+				float angleY = std::fmod(camera->getRotationAngleY() + deltaY / ratioY, 360.0f);
+				float angleX = camera->getRotationAngleX() + deltaX / ratioX;
+
+				if (angleX > 90.0f)
+					angleX = 90.0f;
+				else if (angleX < -90.0f)
+					angleX = -90.0f;
+
+				camera->setAngles(angleX, angleY);
+				glutPostRedisplay();
+				break;
+			}
+			default:
+				break;
+		}
+	}
+}
 
 void resize(int width, int height)
 {
@@ -51,11 +96,11 @@ void display()
 	);
 
 	glBegin(GL_QUADS);
-	
+
 	//sollte man nicht unbedingt hier machen. Die Vertices kann man besser woanders berechnen
 	std::vector<Vector3d> quadVertices = testQuad->getQuadVertices();
-	quadVertices = Geometry::rotateY(quadVertices, 45.0f);
-	quadVertices = Geometry::rotateX(quadVertices, 45.0f);
+	quadVertices = Geometry::rotateY(quadVertices, -45.0f);
+	quadVertices = Geometry::rotateX(quadVertices, -45.0f);
 	/*quadVertices = Geometry::rotateZ(quadVertices, 45.0);*/
 	quadVertices = Geometry::translate(quadVertices, testQuad->getTranslationVector());
 
@@ -90,10 +135,9 @@ void init(int width, int height)
 int main(int argc, char** argv)
 {
 	testQuad = new Quad(4.0f, 2.0f, 6.0f);
-	testQuad->setPosition(Vector3d(-2.0f, -1.0f, -20.0f));
+	testQuad->setPosition(Vector3d(-2.0f, -1.0f, 20.0f));
 
 	camera = new Camera();
-	camera->setRoationAngleY(180.0f);
 
 	glutInit(&argc, argv);
 
@@ -102,13 +146,14 @@ int main(int argc, char** argv)
 	//RGBA werte für pixel
 	//GLUT_MULTISAMPLE https://www.khronos.org/opengl/wiki/Multisampling das vielleicht?
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
-	glutInitWindowSize(1024, 768);
+	glutInitWindowSize(width, height);
 	glutInitWindowPosition(150, 150);
 
 	int windowHandle = glutCreateWindow("Intro");
 	glutDisplayFunc(&display);
 	glutReshapeFunc(&resize);
-	init(1024, 768);
+	glutMouseFunc(&onClick);
+	init(width, height);
 
 	glutMainLoop();
 
