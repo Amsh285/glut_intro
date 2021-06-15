@@ -11,11 +11,23 @@
 #include "Vector3d.h"
 #include "Vector3dMatrix.h"
 
+#include "stb_image.h"
+#include "stb_imageData.h"
+
+#include "QuadTextureCoords.h"
+
 const int width = 1024;
 const int height = 768;
 
 Camera* camera = nullptr;
 Quad* testQuad = nullptr;
+Quad* texturedTestQuad = nullptr;
+Quad* skyQuad = nullptr;
+
+stb_imageData* texture = nullptr;
+stb_imageData* skyTexture = nullptr;
+
+
 
 int downX;
 int downY;
@@ -48,6 +60,9 @@ void onClick(int button, int state, int x, int y)
 				else if (angleX < -90.0f)
 					angleX = -90.0f;
 
+
+				std::cout << "Pitch: " << std::to_string(angleX) << " - Yaw: " << std::to_string(angleY) << std::endl;
+
 				//Todo: muss man beim ändern des Winkels eine neuen upvektor berechnen?
 				camera->setAngles(angleX, angleY);
 				glutPostRedisplay();
@@ -61,8 +76,6 @@ void onClick(int button, int state, int x, int y)
 
 void onKeyPressed(unsigned char key, int x, int y)
 {
-	std::cout << key << std::endl;
-
 	if (key == 'w')
 	{
 		Vector3d newCameraPosition = camera->getPosition() + camera->getDirection();
@@ -81,6 +94,9 @@ void onKeyPressed(unsigned char key, int x, int y)
 		camera->setAngles(0.0f, 0.0f);
 		glutPostRedisplay();
 	}
+
+	Vector3d cameraPosition = camera->getPosition();
+	std::cout << "New Camera Position: (" << cameraPosition.X() << ", " << cameraPosition.Y() << ", " << cameraPosition.Z() << ")" << std::endl;
 }
 
 void resize(int width, int height)
@@ -113,6 +129,8 @@ void display()
 
 	Vector3d position = camera->getPosition();
 	Vector3d direction = camera->getPosition() + camera->getDirection();
+
+	// Sollte man den anpassen wenn pitch sich ändert?
 	Vector3d upVector = camera->getUpVector();
 
 	gluLookAt(position.X(), position.Y(), position.Z(),
@@ -123,6 +141,7 @@ void display()
 	glBegin(GL_QUADS);
 
 	std::vector<Vector3d> quadVertices = testQuad->getQuadVertices();
+
 	quadVertices = Geometry::rotateY(quadVertices, -45.0f);
 	quadVertices = Geometry::rotateX(quadVertices, -45.0f);
 	quadVertices = Geometry::translate(quadVertices, testQuad->getTranslationVector());
@@ -134,6 +153,48 @@ void display()
 	}
 
 	glEnd();
+
+	glEnable(GL_TEXTURE_2D);
+
+	if (texture != nullptr)
+		texture->bind();
+
+	glBegin(GL_QUADS);
+
+	std::vector<Vector3d> texQuadVertices = texturedTestQuad->getQuadVertices();
+	texQuadVertices = Geometry::translate(texQuadVertices, texturedTestQuad->getTranslationVector());
+
+	for (size_t i = 0; i < texQuadVertices.size(); i++)
+	{
+		Vector3d vertex = texQuadVertices[i];
+		std::pair<float, float> textureCoord = quadTextureCoords[i];
+
+		glTexCoord2f(textureCoord.first, textureCoord.second);
+		glVertex3f(vertex.X(), vertex.Y(), vertex.Z());
+	}
+
+	glEnd();
+
+	std::vector<Vector3d> skyQuadVertices = skyQuad->getQuadVertices();
+	skyQuadVertices = Geometry::translate(skyQuadVertices, skyQuad->getTranslationVector());
+
+	if (skyTexture != nullptr)
+		skyTexture->bind();
+
+	glBegin(GL_QUADS);
+
+	for (size_t i = 0; i < skyQuadVertices.size(); i++)
+	{
+		Vector3d vertex = skyQuadVertices[i];
+		std::pair<float, float> textureCoord = quadTextureCoords[i];
+
+		glTexCoord2f(textureCoord.first, textureCoord.second);
+		glVertex3f(vertex.X(), vertex.Y(), vertex.Z());
+	}
+
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
 
 	// Renderbuffer wechseln und anzeigen
 	glutSwapBuffers();
@@ -153,12 +214,24 @@ void init(int width, int height)
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel(GL_SMOOTH);
 	resize(width, height);
+
+	GLuint textureIDs[2];
+	glGenTextures(2, textureIDs);
+
+	texture = new stb_imageData(textureIDs[0], "dachs01.jpg");
+	skyTexture = new stb_imageData(textureIDs[1], "sky.jpg");
 }
 
 int main(int argc, char** argv)
 {
 	testQuad = new Quad(4.0f, 2.0f, 6.0f);
 	testQuad->setPosition(Vector3d(-2.0f, -1.0f, 20.0f));
+
+	texturedTestQuad = new Quad(2.0f, 2.0f, 2.0f);
+	texturedTestQuad->setPosition(Vector3d(-8.0f, -1.0f, 10.0f));
+
+	skyQuad = new Quad(50.0f, 1.0f, 50.0f);
+	skyQuad->setPosition(Vector3d(-25.0f, 75.0f, -25.0f));
 
 	camera = new Camera();
 

@@ -146,6 +146,8 @@
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Quad.cpp" />
+    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="stb_imageData.cpp" />
     <ClCompile Include="Vector3d.cpp" />
     <ClCompile Include="Vector3dMatrix.cpp" />
   </ItemGroup>
@@ -154,6 +156,9 @@
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Quad.h" />
+    <ClInclude Include="QuadTextureCoords.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="stb_imageData.h" />
     <ClInclude Include="Vector3d.h" />
     <ClInclude Include="Vector3dMatrix.h" />
   </ItemGroup>
