@@ -46,8 +46,3 @@ Vector3d Vector3dMatrix::operator*(const Vector3d& other) const
 
 	return v1 + v2 + v3;
 }
-
-Vector3dMatrix Vector3dMatrix::operator*(const float& value) const
-{
-	return Vector3dMatrix(value * col1, value * col2, value * col3);
-}

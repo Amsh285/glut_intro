@@ -27,10 +27,11 @@ Quad* skyQuad = nullptr;
 stb_imageData* texture = nullptr;
 stb_imageData* skyTexture = nullptr;
 
-
-
 int downX;
 int downY;
+
+const std::pair<float, float> thresholdDeltaY(30.0f, -30.0f);
+const std::pair<float, float> thresholdDeltaX(30.0f, -30.0f);
 
 void onClick(int button, int state, int x, int y)
 {
@@ -49,6 +50,15 @@ void onClick(int button, int state, int x, int y)
 				int deltaY = x - downX;
 				int deltaX = downY - y;
 
+				bool insideYThreshold = deltaY <= thresholdDeltaY.first && deltaY >= thresholdDeltaY.second;
+				bool insideXThreshold = deltaX <= thresholdDeltaX.first && deltaX >= thresholdDeltaX.second;
+
+				if (insideYThreshold)
+					deltaY = 0;
+
+				if (insideXThreshold)
+					deltaX = 0;
+
 				float ratioY = width / 90;
 				float ratioX = height / 60;
 
@@ -60,10 +70,9 @@ void onClick(int button, int state, int x, int y)
 				else if (angleX < -90.0f)
 					angleX = -90.0f;
 
-
 				std::cout << "Pitch: " << std::to_string(angleX) << " - Yaw: " << std::to_string(angleY) << std::endl;
 
-				//Todo: muss man beim ändern des Winkels eine neuen upvektor berechnen?
+				//Todo: muss man beim ändern des Winkels einen neuen upvektor berechnen?
 				camera->setAngles(angleX, angleY);
 				glutPostRedisplay();
 				break;
