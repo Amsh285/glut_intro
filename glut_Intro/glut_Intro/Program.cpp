@@ -151,8 +151,8 @@ void display()
 
 	std::vector<Vector3d> quadVertices = testQuad->getQuadVertices();
 
-	quadVertices = Geometry::rotateY(quadVertices, -45.0f);
-	quadVertices = Geometry::rotateX(quadVertices, -45.0f);
+	quadVertices = Geometry::rotateY(quadVertices, 45.0f);
+	quadVertices = Geometry::rotateX(quadVertices, 45.0f);
 	quadVertices = Geometry::translate(quadVertices, testQuad->getTranslationVector());
 
 	for (size_t i = 0; i < quadVertices.size(); i++)
@@ -234,13 +234,13 @@ void init(int width, int height)
 int main(int argc, char** argv)
 {
 	testQuad = new Quad(4.0f, 2.0f, 6.0f);
-	testQuad->setPosition(Vector3d(-2.0f, -1.0f, 20.0f));
+	testQuad->setPosition(Vector3d(-2.0f, -1.0f, -20.0f));
 
 	texturedTestQuad = new Quad(2.0f, 2.0f, 2.0f);
-	texturedTestQuad->setPosition(Vector3d(-8.0f, -1.0f, 10.0f));
+	texturedTestQuad->setPosition(Vector3d(8.0f, -1.0f, -10.0f));
 
 	skyQuad = new Quad(50.0f, 1.0f, 50.0f);
-	skyQuad->setPosition(Vector3d(-25.0f, 75.0f, -25.0f));
+	skyQuad->setPosition(Vector3d(-25.0f, 75.0f, 25.0f));
 
 	camera = new Camera();
 

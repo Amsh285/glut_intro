@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="QuadTests.cpp" />
     <ClCompile Include="Vector3dMatrixTests.cpp" />
     <ClCompile Include="VectorTests.cpp" />
     <ClCompile Include="pch.cpp">

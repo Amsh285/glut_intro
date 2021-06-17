@@ -9,13 +9,8 @@ Quad::Quad(float width, float height, float depth)
 	: width(width), height(height), depth(depth)
 {
 	//todo: check negative Values and 0
-
-	Vector3d identityX = Vector3d(-1.0f, 0.0f, 0.0f);
-	Vector3d identityY = Vector3d(0.0f, -1.0f, 0.0f);
-	Vector3d identityZ = Vector3d(0.0f, 0.0f, -1.0f);
-
-	Vector3dMatrix reflectionMatrix = Vector3dMatrix(identityX, identityY, identityZ);
-	atOrigin = reflectionMatrix * fulcrum();
+	Vector3d ful = fulcrum();
+	atOrigin = Vector3d(-ful.X(), -ful.Y(), ful.Z());
 }
 
 std::vector<Vector3d> Quad::getQuadVertices()
@@ -23,9 +18,9 @@ std::vector<Vector3d> Quad::getQuadVertices()
 	std::vector<Vector3d> quadVertices;
 
 	//front
-	Vector3d frontRightBottom = atOrigin + width * Vector3d::forward();
+	Vector3d frontRightBottom = atOrigin + width * Vector3d::right();
 	Vector3d frontRightTop = frontRightBottom + height * Vector3d::up();
-	Vector3d frontLeftTop = frontRightTop + width * Vector3d::back();
+	Vector3d frontLeftTop = frontRightTop + width * Vector3d::left();
 
 	//Die Reihenfolge spielt eine Rolle
 	//links unten, rechts unten, rechts oben, links oben
@@ -35,7 +30,7 @@ std::vector<Vector3d> Quad::getQuadVertices()
 	quadVertices.push_back(frontLeftTop);
 
 	//right side
-	Vector3d backRightBottom = frontRightBottom + depth * Vector3d::right();
+	Vector3d backRightBottom = frontRightBottom + depth * Vector3d::forward();
 	Vector3d backRightTop = backRightBottom + height * Vector3d::up();
  
 	quadVertices.push_back(frontRightBottom);
@@ -44,7 +39,7 @@ std::vector<Vector3d> Quad::getQuadVertices()
 	quadVertices.push_back(frontRightTop);
 
 	//upside
-	Vector3d backLeftTop = backRightTop + width * Vector3d::back();
+	Vector3d backLeftTop = backRightTop + width * Vector3d::left();
 
 	quadVertices.push_back(frontLeftTop);
 	quadVertices.push_back(frontRightTop);
