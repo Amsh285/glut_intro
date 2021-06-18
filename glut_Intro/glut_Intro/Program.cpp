@@ -23,15 +23,29 @@ Camera* camera = nullptr;
 Quad* testQuad = nullptr;
 Quad* texturedTestQuad = nullptr;
 Quad* skyQuad = nullptr;
+Quad* animatedQuad = nullptr;
 
 stb_imageData* texture = nullptr;
 stb_imageData* skyTexture = nullptr;
+stb_imageData* animatedCubeTexture = nullptr;
+
+float animationRotationY = 0.0f;
 
 int downX;
 int downY;
 
 const std::pair<float, float> thresholdDeltaY(30.0f, -30.0f);
 const std::pair<float, float> thresholdDeltaX(30.0f, -30.0f);
+
+void timerFunc(int id)
+{
+	/*std::cout << "timer ID: " << id << std::endl;*/
+
+	animationRotationY = std::fmod(animationRotationY + 1.0f, 360);
+
+	glutPostRedisplay();
+	glutTimerFunc(1000 / 60, &timerFunc, id);
+}
 
 void onClick(int button, int state, int x, int y)
 {
@@ -203,6 +217,26 @@ void display()
 
 	glEnd();
 
+	std::vector<Vector3d> animatedQuadVertices = animatedQuad->getQuadVertices();
+	animatedQuadVertices = Geometry::rotateY(animatedQuadVertices, animationRotationY);
+	animatedQuadVertices = Geometry::translate(animatedQuadVertices, animatedQuad->getTranslationVector());
+
+	if (animatedCubeTexture != nullptr)
+		animatedCubeTexture->bind();
+
+	glBegin(GL_QUADS);
+
+	for (size_t i = 0; i < animatedQuadVertices.size(); i++)
+	{
+		Vector3d vertex = animatedQuadVertices[i];
+		std::pair<float, float> textureCoord = quadTextureCoords[i];
+
+		glTexCoord2f(textureCoord.first, textureCoord.second);
+		glVertex3f(vertex.X(), vertex.Y(), vertex.Z());
+	}
+
+	glEnd();
+
 	glDisable(GL_TEXTURE_2D);
 
 	// Renderbuffer wechseln und anzeigen
@@ -224,11 +258,12 @@ void init(int width, int height)
 	glShadeModel(GL_SMOOTH);
 	resize(width, height);
 
-	GLuint textureIDs[2];
-	glGenTextures(2, textureIDs);
+	GLuint textureIDs[3];
+	glGenTextures(3, textureIDs);
 
 	texture = new stb_imageData(textureIDs[0], "dachs01.jpg");
 	skyTexture = new stb_imageData(textureIDs[1], "sky.jpg");
+	animatedCubeTexture = new stb_imageData(textureIDs[2], "sire.jpg");
 }
 
 int main(int argc, char** argv)
@@ -241,6 +276,9 @@ int main(int argc, char** argv)
 
 	skyQuad = new Quad(50.0f, 1.0f, 50.0f);
 	skyQuad->setPosition(Vector3d(-25.0f, 75.0f, 25.0f));
+
+	animatedQuad = new Quad(4.0f, 4.0f, 4.0f);
+	animatedQuad->setPosition(Vector3d(-2.0f, -2.0f, 20.0f));
 
 	camera = new Camera();
 
@@ -259,6 +297,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(&resize);
 	glutMouseFunc(&onClick);
 	glutKeyboardFunc(&onKeyPressed);
+	glutTimerFunc(1000 / 60, &timerFunc, 1);
 	init(width, height);
 
 	glutMainLoop();
